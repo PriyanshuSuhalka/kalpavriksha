@@ -1,0 +1,129 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node
+{
+    void *data;
+    struct Node *next;
+};
+
+void push(struct Node **head_ref, void *new_data, size_t data_size)
+{
+    struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
+
+    new_node->data = malloc(data_size);
+    new_node->next = (*head_ref);
+
+    for (int i = 0; i < data_size; i++)
+        *((char *)new_node->data + i) = *((char *)new_data + i);
+
+    (*head_ref) = new_node;
+}
+
+void print(struct Node *node, void (*printer_func)(void *))
+{
+    while (node != NULL)
+    {
+        (*printer_func)(node->data);
+        node = node->next;
+    }
+}
+
+void printInt(void *n)
+{
+    printf(" %d", *(int *)n);
+}
+
+void printFloat(void *f)
+{
+    printf(" %f", *(float *)f);
+}
+
+void printChar(void *c)
+{
+    printf(" %c", *(char *)c);
+}
+
+void printDouble(void *d)
+{
+    printf(" %lf", *(double *)d);
+}
+
+int main()
+{
+    struct Node *start = NULL;
+    int choice;
+    printf("Choose the data type for creating the linked list:\n");
+    printf("1. int\n");
+    printf("2. float\n");
+    printf("3. char\n");
+    printf("4. double\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+
+    size_t data_size;
+    int size;
+    printf("Enter the size of the array: ");
+    scanf("%d", &size);
+
+    switch (choice)
+    {
+    case 1:
+        data_size = sizeof(int);
+        {
+            int int_arr[100];
+            printf("Enter %d integer elements:\n", size);
+            for (int i = 0; i < size; i++)
+                scanf("%d", &int_arr[i]);
+            for (int i = size - 1; i >= 0; i--)
+                push(&start, &int_arr[i], data_size);
+        }
+        printf("Created integer linked list is:\n");
+        print(start, printInt);
+        break;
+    case 2:
+        data_size = sizeof(float);
+        {
+            float float_arr[100];
+            printf("Enter %d float elements:\n", size);
+            for (int i = 0; i < size; i++)
+                scanf("%f", &float_arr[i]);
+            for (int i = size - 1; i >= 0; i--)
+                push(&start, &float_arr[i], data_size);
+        }
+        printf("Created float linked list is:\n");
+        print(start, printFloat);
+        break;
+    case 3:
+        data_size = sizeof(char);
+        {
+            char char_arr[100];
+            printf("Enter %d character elements:\n", size);
+            for (int i = 0; i < size; i++)
+                scanf(" %c", &char_arr[i]);
+            for (int i = size - 1; i >= 0; i--)
+                push(&start, &char_arr[i], data_size);
+        }
+        printf("Created char linked list is:\n");
+        print(start, printChar);
+        break;
+    case 4:
+        data_size = sizeof(double);
+        {
+            double double_arr[100];
+            printf("Enter %d double elements:\n", size);
+            for (int i = 0; i < size; i++)
+                scanf("%lf", &double_arr[i]);
+            for (int i = size - 1; i >= 0; i--)
+                push(&start, &double_arr[i], data_size);
+        }
+        printf("Created double linked list is:\n");
+        print(start, printDouble);
+        break;
+    default:
+        printf("Invalid choice\n");
+        break;
+    }
+
+    return 0;
+}
